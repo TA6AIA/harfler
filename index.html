@@ -54,22 +54,25 @@
 
     <script>
         window.addEventListener('DOMContentLoaded', () => {
-            // URL'deki "harf" parametresini alıyoruz (Örn: ?harf=a)
             const urlParams = new URLSearchParams(window.location.search);
-            let harfId = urlParams.get('harf');
+            let harfParam = urlParams.get('harf');
             
             const harfElement = document.getElementById('harf-alani');
             const playerElement = document.getElementById('audio-player');
 
-            // Türkçe karakter desteğiyle birlikte harf kontrolü
-            if (harfId && /^[a-zA-ZçÇğĞıİöÖşŞüÜ]+$/.test(harfId)) {
-                harfId = harfId.trim().toLowerCase(); // Küçük harfe çeviriyoruz
+            // Alt çizgiye (_) de izin verecek şekilde regex güncellendi
+            if (harfParam && /^[a-zA-ZçÇğĞıİöÖşŞüÜ_]+$/.test(harfParam)) {
+                harfParam = harfParam.trim().toLowerCase();
                 
-                // Ekranda büyük harfle "A HARFİ" yazar
-                harfElement.textContent = harfId.toUpperCase() + " HARFİ"; 
+                // Eğer URL'den sadece "a" geldiyse "a_harfi" yap, "a_harfi" geldiyse aynen bırak
+                let dosyaAdi = harfParam.includes('_harfi') ? harfParam : harfParam + '_harfi';
+                
+                // Ekranda temiz ve büyük göstermek için sadece harfin kendisini alıyoruz (Örn: "A HARFİ")
+                let sadeceHarf = harfParam.replace('_harfi', '').toUpperCase();
+                harfElement.textContent = sadeceHarf + " HARFİ"; 
 
-                // Dosya adını dinamik olarak "a_harfi.mp4" şeklinde oluşturur
-                playerElement.src = harfId + '_harfi.mp4';
+                // Ses dosyasını yüklüyoruz (Örn: a_harfi.mp4)
+                playerElement.src = dosyaAdi + '.mp4';
                 playerElement.load();
             } else {
                 harfElement.innerHTML = "<span class='error'>GEÇERSİZ QR KOD!</span>";
