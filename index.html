@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>harfler Ses Rehberi</title>
+    <title>Harfler Ses Rehberi</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -24,32 +24,29 @@
             width: 90%;
             max-width: 350px;
         }
-        h2 { 
-            color: #333; 
-            margin-bottom: 20px; 
-            font-size: 24px; 
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 24px;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
-        audio { 
-            width: 100%; 
-            margin-top: 10px; 
+        audio {
+            width: 100%;
+            margin-top: 10px;
         }
-        .error { 
-            color: #d9534f; 
-            font-weight: bold; 
+        .error {
+            color: #d9534f;
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
 
     <div class="player-container">
-        <!-- Başlık alanı başlangıçta boş kalacak, JavaScript dolduracak -->
-        <h2 id="spor-adi">YÜKLENİYOR...</h2>
-        
+        <h2 id="harf-alani">YÜKLENİYOR...</h2>
         <div id="player-area">
             <audio id="audio-player" controls>
-                <source id="audio-source" src="" type="audio/mp4">
                 Tarayıcınız ses öğesini desteklemiyor.
             </audio>
         </div>
@@ -57,33 +54,28 @@
 
     <script>
         window.addEventListener('DOMContentLoaded', () => {
-            // URL'deki parametreyi alıyoruz
+            // URL'deki "harf" parametresini alıyoruz (Örn: ?harf=a)
             const urlParams = new URLSearchParams(window.location.search);
-            let sporId = urlParams.get('spor');
-
-            const sporAdiElement = document.getElementById('harf-adi');
+            let harfId = urlParams.get('harf');
+            
+            const harfElement = document.getElementById('harf-alani');
             const playerElement = document.getElementById('audio-player');
-            const sourceElement = document.getElementById('audio-source');
 
-            if (sporId) {
-                // Küçük harfe çevirip güvenlik sağlama
-                sporId = sporId.toLowerCase().trim();
+            // Türkçe karakter desteğiyle birlikte harf kontrolü
+            if (harfId && /^[a-zA-ZçÇğĞıİöÖşŞüÜ]+$/.test(harfId)) {
+                harfId = harfId.trim().toLowerCase(); // Küçük harfe çeviriyoruz
                 
-                // Başlığı temiz adla güncelle
-                let temizAd = sporId.replace(/_/g, ' ');
-                sporAdiElement.innerText = temizAd;
-                
-                // Doğrudan ses dosyasının adını ata
-                sourceElement.setAttribute('src', sporId + '.mp4');
-                
-                // Oynatıcıyı yeniden yükle
+                // Ekranda büyük harfle "A HARFİ" yazar
+                harfElement.textContent = harfId.toUpperCase() + " HARFİ"; 
+
+                // Dosya adını dinamik olarak "a_harfi.mp4" şeklinde oluşturur
+                playerElement.src = harfId + '_harfi.mp4';
                 playerElement.load();
             } else {
-                sporAdiElement.innerHTML = "<span class='error'>GEÇERSİZ QR KOD!</span>";
+                harfElement.innerHTML = "<span class='error'>GEÇERSİZ QR KOD!</span>";
                 playerElement.style.display = 'none';
             }
         });
     </script>
-
 </body>
 </html>
