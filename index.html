@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geleneksel Sporlar Ses Rehberi</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f0f2f5;
+            margin: 0;
+        }
+        .player-container {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            text-align: center;
+            width: 90%;
+            max-width: 350px;
+        }
+        h2 { 
+            color: #333; 
+            margin-bottom: 20px; 
+            font-size: 24px; 
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        audio { 
+            width: 100%; 
+            margin-top: 10px; 
+        }
+        .error { 
+            color: #d9534f; 
+            font-weight: bold; 
+        }
+    </style>
+</head>
+<body>
+
+    <div class="player-container">
+        <!-- Başlık alanı başlangıçta boş kalacak, JavaScript dolduracak -->
+        <h2 id="spor-adi">YÜKLENİYOR...</h2>
+        
+        <div id="player-area">
+            <audio id="audio-player" controls>
+                <source id="audio-source" src="" type="audio/mp4">
+                Tarayıcınız ses öğesini desteklemiyor.
+            </audio>
+        </div>
+    </div>
+
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            // URL'deki parametreyi alıyoruz
+            const urlParams = new URLSearchParams(window.location.search);
+            let sporId = urlParams.get('spor');
+
+            const sporAdiElement = document.getElementById('spor-adi');
+            const playerElement = document.getElementById('audio-player');
+            const sourceElement = document.getElementById('audio-source');
+
+            if (sporId) {
+                // Küçük harfe çevirip güvenlik sağlama
+                sporId = sporId.toLowerCase().trim();
+                
+                // Başlığı temiz adla güncelle
+                let temizAd = sporId.replace(/_/g, ' ');
+                sporAdiElement.innerText = temizAd;
+                
+                // Doğrudan ses dosyasının adını ata
+                sourceElement.setAttribute('src', sporId + '.mp4');
+                
+                // Oynatıcıyı yeniden yükle
+                playerElement.load();
+            } else {
+                sporAdiElement.innerHTML = "<span class='error'>GEÇERSİZ QR KOD!</span>";
+                playerElement.style.display = 'none';
+            }
+        });
+    </script>
+
+</body>
+</html>
